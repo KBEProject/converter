@@ -10,7 +10,14 @@ public class TickerAPI {
     private static final String URL = "https://api.bitforex.com/api/v1/market/ticker";
     private final OkHttpClient client = new OkHttpClient();
 
+    /**
+     * An API- Request that returns the current price
+     * of a particular crypto currency (coinName)
+     * @param coinName
+     * @return
+     */
     public Double getCurrentValue(String coinName) {
+
         Request request = new Request.Builder()
                 .url(URL + "?symbol=" + "coin-usdt-"+coinName)
                 .get()

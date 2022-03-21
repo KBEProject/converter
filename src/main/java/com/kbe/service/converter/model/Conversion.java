@@ -3,9 +3,11 @@ package com.kbe.service.converter.model;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.text.DecimalFormat;
 
-@Document("conversion")
-public class Coin {
+
+@Document("conversions")
+public class Conversion {
 
     @Id
     private String id;
@@ -13,14 +15,14 @@ public class Coin {
     /**
      * user who made that conversion
      */
-    private String userId;
+    private String user;
 
     /**
-     * Time in milliseconds
+     * conversion request date
      */
-    private String nonce;
+    private String date;
 
-    private String name;
+    private String currencyName;
     private double usdvalue;
     private double coinvalue;
 
@@ -28,16 +30,16 @@ public class Coin {
         this.id = id;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setUser(String user) {
+        this.user = user;
     }
 
-    public void setNonce(String nonce) {
-        this.nonce = nonce;
+    public void setDate(String date) {
+        this.date = date;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setCurrencyName(String currencyName) {
+        this.currencyName = currencyName;
     }
 
     public void setUsdvalue(double usdvalue) {
@@ -52,16 +54,16 @@ public class Coin {
         return id;
     }
 
-    public String getUserId() {
-        return userId;
+    public String getUser() {
+        return user;
     }
 
-    public String getNonce() {
-        return nonce;
+    public String getDate() {
+        return date;
     }
 
-    public String getName() {
-        return name;
+    public String getCurrencyName() {
+        return currencyName;
     }
 
     public double getUsdvalue() {
@@ -76,9 +78,9 @@ public class Coin {
     public String toString() {
         return "Conversion{" +
                 "id='" + id + '\'' +
-                "userId='" + userId + '\'' +
-                ", nonce='" + nonce + '\'' +
-                ", name='" + name + '\'' +
+                "userId='" + user + '\'' +
+                ", date='" + date + '\'' +
+                ", name='" + currencyName + '\'' +
                 ", usdvalue='" + usdvalue + '\'' +
                 ", coinvalue='" + coinvalue + '\'' +
                 '}';

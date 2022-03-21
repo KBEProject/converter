@@ -1,18 +1,28 @@
 package com.kbe.service.converter.controller;
 
-import com.kbe.service.converter.model.Coin;
+import com.kbe.service.converter.model.Conversion;
 import com.kbe.service.converter.model.Converter;
 import com.kbe.service.converter.repository.ConversionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/conversions")
+@CrossOrigin(origins = {
+        "*"
+},
+        allowedHeaders = "*",
+        allowCredentials = "false",
+
+        methods = {
+                RequestMethod.GET,
+                RequestMethod.POST,
+                RequestMethod.DELETE
+        })
 public class ConversionController {
 
     @Autowired
@@ -24,9 +34,9 @@ public class ConversionController {
 
     @GetMapping("/findAll")
     public ResponseEntity<?> getAllConversions() {
-        List<Coin> coins = conversionRepository.findAll();
-        if (coins.size() > 0) {
-            return new ResponseEntity<>(coins, HttpStatus.OK);
+        var conversions = conversionRepository.findAll();
+        if (conversions.size() > 0) {
+            return new ResponseEntity<>(conversions, HttpStatus.OK);
         } else {
             return new ResponseEntity<>("no conversions found!", HttpStatus.NOT_FOUND);
         }
@@ -34,33 +44,32 @@ public class ConversionController {
 
     @GetMapping("/findOne")
     public ResponseEntity<?> getOneCoversion(@RequestParam String id) {
-        Coin coin = conversionRepository.findConversionByID(id);
-        if (!coin.equals(null)) {
-            return new ResponseEntity<>(coin, HttpStatus.OK);
+        var conversion = conversionRepository.findConversionByID(id);
+        if (!conversion.equals(null)) {
+            return new ResponseEntity<>(conversion, HttpStatus.OK);
         } else {
             return new ResponseEntity<>("Conversion with id " + id + "not found!", HttpStatus.NOT_FOUND);
         }
     }
 
-    @GetMapping("/findUsers")
-    public ResponseEntity<?> getUsersCoversions(@RequestParam String userId) {
-        List<Coin> coins = conversionRepository.findConersionsOfUser(userId);
-        if (coins.size() > 0) {
-            return new ResponseEntity<>(coins, HttpStatus.OK);
+    @GetMapping("/findConversionOfUser")
+    public ResponseEntity<?> getUsersConversions(@RequestParam String user) {
+
+        var conversions = conversionRepository.findConversionsOfUser(user);
+        if (conversions.size() > 0) {
+            return new ResponseEntity<>(conversions, HttpStatus.OK);
         } else {
-            return new ResponseEntity<>("Conversion with userId " + userId + " not found!", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Conversions of user " + user + " not found!", HttpStatus.NOT_FOUND);
         }
     }
 
     @PostMapping("/insert")
-    public ResponseEntity<?> insert(@RequestBody Coin entity) {
-        //TODO: throws exception if "id" already exists.. handle that later
-        Coin coin;
-        converter.setCoin(entity);
+    public ResponseEntity<?> insert(@RequestBody Conversion entity) {
+        converter.setConversion(entity);
         if (converter.convert()) {
-            coin = conversionRepository.insert(converter.getCoin());
-            if (!coin.equals(null)) {
-                return new ResponseEntity<>("added: " + coin.toString(), HttpStatus.OK);
+            var conversion = conversionRepository.insert(converter.getConversion());
+            if (!conversion.equals(null)) {
+                return new ResponseEntity<>(conversion, HttpStatus.OK);
             }
         }
         return new ResponseEntity<>("conversion failed", HttpStatus.BAD_REQUEST);
@@ -70,15 +79,34 @@ public class ConversionController {
     @DeleteMapping("/delete")
     public ResponseEntity<?> delete(@RequestParam String id) {
         if (conversionRepository.findConversionByID(id) == null) {
-            return new ResponseEntity<>("id: " + id + " doesn't exist", HttpStatus.OK);
+            return new ResponseEntity<>("id: " + id + " doesn't exist", HttpStatus.NOT_FOUND);
         }
 
         conversionRepository.deleteById(id);
         if (conversionRepository.findConversionByID(id) == null) {
-            return new ResponseEntity<>("Conversion with id " + id + " deleted", HttpStatus.OK);
+            return new ResponseEntity<>(id, HttpStatus.OK);
         } else {
             return new ResponseEntity<>("Failed to delete", HttpStatus.NOT_FOUND);
 
         }
     }
+
+    @DeleteMapping("/deleteAll")
+    public ResponseEntity<?> deleteAll() {
+        conversionRepository.deleteAll();
+        if (conversionRepository.findAll().size() == 0) {
+            return new ResponseEntity<>("All Conversions deleted", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Failed to delete", HttpStatus.NOT_FOUND);
+
+        }
+    }
+
+    /**
+     * In other words, the way for getting browsers to relax the same-origin policy
+     * is for servers to use the Access-Control-Allow-Origin header
+     * to indicate they’re opting in to cross-origin requests.
+     * - StackOverflow
+     */
+
 }
