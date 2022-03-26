@@ -39,12 +39,40 @@ public class Conversion {
         this.coinvalue = coinvalue;
     }
 
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public void setCurrencyName(String currencyName) {
+        this.currencyName = currencyName;
+    }
+
     public void setUsdvalue(double usdvalue) {
         this.usdvalue = usdvalue;
     }
 
     public void setCoinvalue(double coinvalue) {
         this.coinvalue = coinvalue;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getDate() {
+        return date;
     }
 
     public String getCurrencyName() {

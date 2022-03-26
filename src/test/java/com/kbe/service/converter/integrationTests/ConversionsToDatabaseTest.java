@@ -168,7 +168,7 @@ class ConversionsToDatabaseTest {
      */
     @Test
     void deleteConversionTest() throws Exception {
-        String email = "suheib";
+        String email = "deleteUser@mail.de";
 
         conversion = new Conversion(UUID.randomUUID().toString(), email, "btc", "name", 0, 10);
         Gson gson = new Gson();
