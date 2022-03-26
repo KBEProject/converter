@@ -11,6 +11,6 @@ public interface ConversionRepository extends MongoRepository<Conversion, String
     @Query("{id:'?0'}")
     Conversion findConversionByID(String id);
 
-    @Query("{user:'?0'}")
-    List<Conversion> findConversionsOfUser(String user);
+    @Query("{email:'?0'}")
+    List<Conversion> findConversionsOfUser(String email);
 }

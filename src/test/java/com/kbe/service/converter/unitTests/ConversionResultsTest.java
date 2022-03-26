@@ -1,4 +1,4 @@
-package com.kbe.service.converter;
+package com.kbe.service.converter.unitTests;
 
 import com.kbe.service.converter.model.Conversion;
 import com.kbe.service.converter.model.Converter;

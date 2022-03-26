@@ -2,10 +2,11 @@ package com.kbe.service.converter.model;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.stereotype.Component;
 
 import java.text.DecimalFormat;
 
-
+@Component
 @Document("conversions")
 public class Conversion {
 
@@ -15,7 +16,7 @@ public class Conversion {
     /**
      * user who made that conversion
      */
-    private String user;
+    private String email;
 
     /**
      * conversion request date
@@ -26,20 +27,16 @@ public class Conversion {
     private double usdvalue;
     private double coinvalue;
 
-    public void setId(String id) {
+    public Conversion() {
+    }
+
+    public Conversion(String id, String email, String date, String currencyName, double usdvalue, double coinvalue) {
         this.id = id;
-    }
-
-    public void setUser(String user) {
-        this.user = user;
-    }
-
-    public void setDate(String date) {
+        this.email = email;
         this.date = date;
-    }
-
-    public void setCurrencyName(String currencyName) {
         this.currencyName = currencyName;
+        this.usdvalue = usdvalue;
+        this.coinvalue = coinvalue;
     }
 
     public void setUsdvalue(double usdvalue) {
@@ -48,18 +45,6 @@ public class Conversion {
 
     public void setCoinvalue(double coinvalue) {
         this.coinvalue = coinvalue;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public String getUser() {
-        return user;
-    }
-
-    public String getDate() {
-        return date;
     }
 
     public String getCurrencyName() {
@@ -78,7 +63,7 @@ public class Conversion {
     public String toString() {
         return "Conversion{" +
                 "id='" + id + '\'' +
-                "userId='" + user + '\'' +
+                "email='" + email + '\'' +
                 ", date='" + date + '\'' +
                 ", name='" + currencyName + '\'' +
                 ", usdvalue='" + usdvalue + '\'' +

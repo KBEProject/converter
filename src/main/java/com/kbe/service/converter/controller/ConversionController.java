@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -31,43 +32,27 @@ public class ConversionController {
     @Autowired
     private Converter converter;
 
+    @GetMapping("/findConversionsOfUser")
+    public ResponseEntity<?> getUsersConversions(@RequestParam String email) {
 
-    @GetMapping("/findAll")
-    public ResponseEntity<?> getAllConversions() {
-        var conversions = conversionRepository.findAll();
+        var conversions = conversionRepository.findConversionsOfUser(email);
         if (conversions.size() > 0) {
             return new ResponseEntity<>(conversions, HttpStatus.OK);
         } else {
-            return new ResponseEntity<>("no conversions found!", HttpStatus.NOT_FOUND);
-        }
-    }
-
-    @GetMapping("/findOne")
-    public ResponseEntity<?> getOneCoversion(@RequestParam String id) {
-        var conversion = conversionRepository.findConversionByID(id);
-        if (!conversion.equals(null)) {
-            return new ResponseEntity<>(conversion, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("Conversion with id " + id + "not found!", HttpStatus.NOT_FOUND);
-        }
-    }
-
-    @GetMapping("/findConversionOfUser")
-    public ResponseEntity<?> getUsersConversions(@RequestParam String user) {
-
-        var conversions = conversionRepository.findConversionsOfUser(user);
-        if (conversions.size() > 0) {
-            return new ResponseEntity<>(conversions, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("Conversions of user " + user + " not found!", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Conversions of user " + email + " not found!", HttpStatus.NOT_FOUND);
         }
     }
 
     @PostMapping("/insert")
     public ResponseEntity<?> insert(@RequestBody Conversion entity) {
         converter.setConversion(entity);
+        Conversion conversion;
         if (converter.convert()) {
-            var conversion = conversionRepository.insert(converter.getConversion());
+            try{
+                conversion = conversionRepository.insert(converter.getConversion());
+            } catch (Exception e){
+                return new ResponseEntity<>("duplicate key", HttpStatus.BAD_REQUEST);
+            }
             if (!conversion.equals(null)) {
                 return new ResponseEntity<>(conversion, HttpStatus.OK);
             }
@@ -76,29 +61,19 @@ public class ConversionController {
 
     }
 
-    @DeleteMapping("/delete")
-    public ResponseEntity<?> delete(@RequestParam String id) {
-        if (conversionRepository.findConversionByID(id) == null) {
-            return new ResponseEntity<>("id: " + id + " doesn't exist", HttpStatus.NOT_FOUND);
+    @DeleteMapping("/deleteAllUserConversions")
+    public ResponseEntity<?> deleteAll(@RequestParam String email) {
+        var conversions = conversionRepository.findConversionsOfUser(email);
+        if(conversions.size() == 0){
+            return new ResponseEntity<>("Email doesn't exist", HttpStatus.BAD_REQUEST);
         }
 
-        conversionRepository.deleteById(id);
-        if (conversionRepository.findConversionByID(id) == null) {
-            return new ResponseEntity<>(id, HttpStatus.OK);
+        conversions.stream().forEach(conversion -> conversionRepository.delete(conversion));
+
+        if (conversionRepository.findConversionsOfUser(email).size() == 0) {
+            return new ResponseEntity<>("All conversions of user deleted", HttpStatus.OK);
         } else {
             return new ResponseEntity<>("Failed to delete", HttpStatus.NOT_FOUND);
-
-        }
-    }
-
-    @DeleteMapping("/deleteAll")
-    public ResponseEntity<?> deleteAll() {
-        conversionRepository.deleteAll();
-        if (conversionRepository.findAll().size() == 0) {
-            return new ResponseEntity<>("All Conversions deleted", HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("Failed to delete", HttpStatus.NOT_FOUND);
-
         }
     }
 
