@@ -13,17 +13,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/conversions")
-@CrossOrigin(origins = {
-        "*"
-},
-        allowedHeaders = "*",
-        allowCredentials = "false",
-
-        methods = {
-                RequestMethod.GET,
-                RequestMethod.POST,
-                RequestMethod.DELETE
-        })
 public class ConversionController {
 
     @Autowired
@@ -76,12 +65,4 @@ public class ConversionController {
             return new ResponseEntity<>("Failed to delete", HttpStatus.NOT_FOUND);
         }
     }
-
-    /**
-     * In other words, the way for getting browsers to relax the same-origin policy
-     * is for servers to use the Access-Control-Allow-Origin header
-     * to indicate they’re opting in to cross-origin requests.
-     * - StackOverflow
-     */
-
 }
