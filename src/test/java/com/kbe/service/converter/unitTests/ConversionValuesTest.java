@@ -8,7 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Here we only test if the functionality return true if one of
+ * Here we only test if the functionality returns true if one of
  * the value (coinvalue or usdvalue) is set
  * if both or none are set, it should return false
  */
@@ -26,7 +26,7 @@ class ConversionValuesTest {
 	void setup(){
 		conversion = new Conversion();
 		converter = new Converter(conversion);
-		converter.setCurrencyValue(10);
+		converter.setOwnCurrencyValue(10);
 	}
 
 	// test the conversion from usd value to coin value

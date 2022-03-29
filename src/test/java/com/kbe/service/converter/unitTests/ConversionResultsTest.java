@@ -25,7 +25,7 @@ class ConversionResultsTest {
     void setup(){
         conversion = new Conversion();
         converter = new Converter(conversion);
-        converter.setCurrencyValue(10);
+        converter.setOwnCurrencyValue(10);
     }
 
     // check the result after the conversion from usd value to coin value

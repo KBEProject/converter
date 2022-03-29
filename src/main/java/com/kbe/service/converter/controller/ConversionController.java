@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +24,6 @@ public class ConversionController {
 
     @GetMapping("/findConversionsOfUser")
     public ResponseEntity<?> getUsersConversions(@RequestParam String email) {
-
         var conversions = conversionRepository.findConversionsOfUser(email);
         if (conversions.size() > 0) {
             return new ResponseEntity<>(conversions, HttpStatus.OK);
@@ -33,25 +33,25 @@ public class ConversionController {
     }
 
     @PostMapping("/insert")
-    public ResponseEntity<?> insert(@RequestBody Conversion entity) {
-        converter.setConversion(entity);
-        Conversion conversion;
+    public ResponseEntity<?> insertConversion(@RequestBody Conversion conversion) {
+        converter.setConversion(conversion);
+        converter.setCurrencyValueFromAPI();
+        Conversion c;
         if (converter.convert()) {
             try{
-                conversion = conversionRepository.insert(converter.getConversion());
+                c = conversionRepository.insert(converter.getConversion());
             } catch (Exception e){
                 return new ResponseEntity<>("duplicate key", HttpStatus.BAD_REQUEST);
             }
             if (!conversion.equals(null)) {
-                return new ResponseEntity<>(conversion, HttpStatus.OK);
+                return new ResponseEntity<>(c, HttpStatus.OK);
             }
         }
         return new ResponseEntity<>("conversion failed", HttpStatus.BAD_REQUEST);
-
     }
 
     @DeleteMapping("/deleteAllUserConversions")
-    public ResponseEntity<?> deleteAll(@RequestParam String email) {
+    public ResponseEntity<?> deleteAllUserConversions(@RequestParam String email) {
         var conversions = conversionRepository.findConversionsOfUser(email);
         if(conversions.size() == 0){
             return new ResponseEntity<>("Email doesn't exist", HttpStatus.BAD_REQUEST);

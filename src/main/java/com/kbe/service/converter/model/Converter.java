@@ -26,12 +26,16 @@ public class Converter {
 
     public void setConversion(Conversion conversion) {
         this.conversion = conversion;
+    }
+
+    public void setCurrencyValueFromAPI(){
         this.currencyValue = api.getCurrentValue(conversion.getCurrencyName());
     }
 
-    public void setCurrencyValue(double currencyValue){
+    public void setOwnCurrencyValue(double currencyValue){
         this.currencyValue = currencyValue;
     }
+
     public Conversion getConversion() {
         return conversion;
     }
@@ -44,7 +48,6 @@ public class Converter {
 
         if (conversion.getUsdvalue() > 0 && conversion.getCoinvalue() == 0) {
             NumberFormat formatter = new DecimalFormat("0.00000", DecimalFormatSymbols.getInstance(Locale.US));
-
             conversion.setCoinvalue(Double.parseDouble(formatter.format(conversion.getUsdvalue() / getCurrentCurrencyPrize())));
             return true;
         } else if (conversion.getCoinvalue() > 0 && conversion.getUsdvalue() == 0) {

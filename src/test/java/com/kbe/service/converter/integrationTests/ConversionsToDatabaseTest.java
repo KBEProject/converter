@@ -34,6 +34,7 @@ class ConversionsToDatabaseTest {
     private Conversion conversion;
 
     /*****************Insert-Tests****************/
+
     /**
      * check if saving conversion to database works
      *
@@ -103,6 +104,7 @@ class ConversionsToDatabaseTest {
     }
 
     /*****************Find Conversions-Tests****************/
+
     /**
      * testing if it can find the conversions
      * of a specific user
